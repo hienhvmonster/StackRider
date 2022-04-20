@@ -14,8 +14,8 @@ public class Ball : MonoBehaviour
     void Start()
     {
         sphereCollider = GetComponentInChildren<SphereCollider>();
-        rigidb = GetComponent<Rigidbody>();
-        rigidb.useGravity = false;
+        //rigidb = GetComponent<Rigidbody>();
+        //rigidb.useGravity = false;
 
         sphere = transform.GetChild(0);
     }
@@ -34,8 +34,13 @@ public class Ball : MonoBehaviour
     private void AddBall(BallStack playerBallStack)
     {
         isAttached = true;
-        Destroy(rigidb);
+        //Destroy(rigidb);
         playerBallStack.AddBall(transform);
+    }
+
+    public void RemoveBall()
+    {
+        isAttached = false;
     }
 
     private void FixedUpdate()

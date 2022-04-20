@@ -18,7 +18,7 @@ public class BallStack : MonoBehaviour
     public void AddBall(Transform ballToAdd)
     {
         Debug.Log("add ball: " + lowestPoint.position.y + " & " + ballToAdd.position.y);
-        if (lowestPoint.position.y <= ballToAdd.position.y + 1) transform.position += Vector3.up;
+        if (lowestPoint.position.y - ballToAdd.position.y < 0.9) transform.position += Vector3.up;
         lowestPoint.localPosition += Vector3.down;
         ballToAdd.SetParent(transform);
         ballToAdd.localPosition = lowestPoint.localPosition;
