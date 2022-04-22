@@ -6,13 +6,11 @@ public class BallStack : MonoBehaviour
 {
     private Stack<Transform> balls = new Stack<Transform>();
     [SerializeField] Transform lowestPoint;
-    private StickManToBall stickManToBall;
 
 
     private void Start()
     {
         lowestPoint.localPosition = Vector3.zero;
-        stickManToBall = GetComponent<StickManToBall>();
     }
 
     public void AddBall(Transform ballToAdd)
@@ -23,7 +21,6 @@ public class BallStack : MonoBehaviour
         ballToAdd.SetParent(transform);
         ballToAdd.localPosition = lowestPoint.localPosition;
         balls.Push(ballToAdd);
-        stickManToBall.AddRigidbody();
     }
 
     public void RemoveBall()

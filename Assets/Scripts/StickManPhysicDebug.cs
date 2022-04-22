@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StickManToBall : MonoBehaviour
+public class StickManPhysicDebug : MonoBehaviour
 {
     private Rigidbody rigidb = null;
 
@@ -21,5 +21,6 @@ public class StickManToBall : MonoBehaviour
     private void FixedUpdate()
     {
         transform.eulerAngles = Vector3.zero;
+        rigidb.velocity = new Vector3(0, rigidb.velocity.y, 0);
     }
 }
