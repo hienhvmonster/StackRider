@@ -4,23 +4,19 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    private bool isStop = false;
+    private bool isStop = true;
     private bool isAttached = false;
-    private SphereCollider sphereCollider;
-    private Rigidbody rigidb;
 
     private Transform sphere;
 
     // Start is called before the first frame update
     void Start()
     {
-        sphereCollider = GetComponentInChildren<SphereCollider>();
-        //rigidb = GetComponent<Rigidbody>();
-        //rigidb.useGravity = false;
 
         sphere = transform.GetChild(0);
 
         this.RegisterListener(EventID.Lose, param => StopBall());
+        this.RegisterListener(EventID.Run, param => StartBall());
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -31,15 +27,20 @@ public class Ball : MonoBehaviour
         BallStack playerBallStack = collision.transform.GetComponentInParent<BallStack>();
 
         if (playerBallStack != null) AddBall(playerBallStack);
-        //else Debug.Log("my name: " + name + " & your: " + collision.transform.name);
     }
 
     private void AddBall(BallStack playerBallStack)
     {
         isAttached = true;
-        //Destroy(rigidb);
         playerBallStack.AddBall(transform);
-        GameManager.instance.AddCoin(1);
+        if (playerBallStack.BallCount() > 1)
+        {
+            GameManager.instance.AddCoin(1);
+        }
+        else
+        {
+            GameManager.instance.AddCoin(0);
+        }
     }
 
     public void RemoveBall()
@@ -56,6 +57,10 @@ public class Ball : MonoBehaviour
         sphere.Rotate(new Vector3(90, 0, 0) * Time.fixedDeltaTime);
     }
 
+    private void StartBall()
+    {
+        isStop = false;
+    }
 
     private void StopBall()
     {
