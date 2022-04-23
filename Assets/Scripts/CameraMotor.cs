@@ -5,11 +5,18 @@ using UnityEngine;
 public class CameraMotor : MonoBehaviour
 {
     [SerializeField] private Transform followPoint;
-    [SerializeField] private Vector3 basicDistance = new Vector3(5, 1.5f, -8);
+    private Vector3 basicDistance;
 
     public float smoothSpeed = 0.125f;
 
+    private bool isRotateMode = false;
+    private Vector3 rotateAroundPoint;
 
+    private void Start()
+    {
+        basicDistance = transform.position - followPoint.position;
+        this.RegisterListener(EventID.Win, param => WinGame((Vector3)param));
+    }
 
     private void FixedUpdate()
     {
@@ -17,10 +24,23 @@ public class CameraMotor : MonoBehaviour
         //moveVector.x = 0;
         //transform.position += moveVector;
 
-        Vector3 desiredPos = followPoint.position + basicDistance;
-        desiredPos.x = transform.position.x;
-        Vector3 newPos = Vector3.Lerp(transform.position, desiredPos, smoothSpeed);
+        if (!isRotateMode)
+        {
+            Vector3 desiredPos = followPoint.position + basicDistance;
+            desiredPos.x = transform.position.x;
+            Vector3 newPos = Vector3.Lerp(transform.position, desiredPos, smoothSpeed);
 
-        transform.position = newPos;
+            transform.position = newPos;
+        }
+        else
+        {
+            transform.RotateAround(rotateAroundPoint, Vector3.up, 45f * Time.fixedDeltaTime);
+        }
+    }
+
+    private void WinGame(Vector3 winCenter)
+    {
+        rotateAroundPoint = winCenter;
+        isRotateMode = true;
     }
 }

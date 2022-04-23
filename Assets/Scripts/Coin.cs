@@ -5,6 +5,24 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
+    private BoxCollider boxCollider;
+    private bool isFlyUp = false;
+
+    private void Start()
+    {
+        boxCollider = GetComponent<BoxCollider>();
+    }
+
+    private void FixedUpdate()
+    {
+        if (isFlyUp)
+        {
+            transform.Translate(Vector3.up * Time.fixedDeltaTime);
+        }
+
+        transform.Rotate(new Vector3(0, 90, 0) * Time.fixedDeltaTime);
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
 
@@ -16,7 +34,15 @@ public class Coin : MonoBehaviour
 
     private void AddCoin()
     {
+        boxCollider.isTrigger = true;
         GameManager.instance.AddCoin(1);
+        isFlyUp = true;
+        StartCoroutine(CoinFlyUp());
+    }
+
+    IEnumerator CoinFlyUp()
+    {
+        yield return new WaitForSeconds(1f);
         Destroy(gameObject);
     }
 }

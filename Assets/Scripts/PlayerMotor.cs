@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerMotor : MonoBehaviour
 {
+    private bool isStop = true;
+
     [SerializeField] private float maxDistanceRoad = 1.5f;
     private Rigidbody rigidb;
     [SerializeField] private Vector3 moveForward = new Vector3(0, 0, 1);
@@ -11,14 +13,17 @@ public class PlayerMotor : MonoBehaviour
 
     [SerializeField] private float sideMaxSpeed = 40f;
 
-
     private void Start()
     {
         rigidb = GetComponent<Rigidbody>();
+        this.RegisterListener(EventID.Lose, param => StopPlayer());
+        this.RegisterListener(EventID.Win, param => StopPlayer());
+        this.RegisterListener(EventID.Run, param => StartPlayer());
     }
 
     private void FixedUpdate()
     {
+        if (isStop) return;
         //rigidb.MovePosition((transform.position + moveForward + moveSide) * Time.fixedDeltaTime);
         //rigidb.AddForce((moveForward + moveSide) * Time.fixedDeltaTime, ForceMode.VelocityChange);
         transform.Translate((moveForward + moveSide) * Time.fixedDeltaTime);
@@ -46,5 +51,15 @@ public class PlayerMotor : MonoBehaviour
 
         if (Mathf.Abs(moveSet.x) > sideMaxSpeed) moveSide.x = moveSet.normalized.x * sideMaxSpeed;
         else moveSide.x = moveSet.x;
+    }
+
+    private void StopPlayer()
+    {
+        isStop = true;
+    }
+
+    public void StartPlayer()
+    {
+        isStop = false;
     }
 }

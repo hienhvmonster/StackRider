@@ -7,39 +7,70 @@ public class BallStack : MonoBehaviour
     private Stack<Transform> balls = new Stack<Transform>();
     [SerializeField] Transform lowestPoint;
 
+    private bool isWin = false;
+    private int coinWin = 5;
+
+    [SerializeField] private float ballDestroyDuration = 0.8f;
+    private float prevBallDestroyTime = 0f;
+
 
     private void Start()
     {
         lowestPoint.localPosition = Vector3.zero;
     }
 
+    private void FixedUpdate()
+    {
+        if (isWin)
+        {
+            if (balls.Count > 0)
+            {
+                if (Time.time - prevBallDestroyTime >= ballDestroyDuration)
+                {
+                    Transform ballToRemove = RemoveBall();
+                    ballToRemove.gameObject.SetActive(false);
+                    GameManager.instance.AddCoin(coinWin);
+                    coinWin += 5;
+                    prevBallDestroyTime = Time.time;
+                }
+            }
+        }
+    }
+
     public void AddBall(Transform ballToAdd)
     {
-        Debug.Log("add ball: " + lowestPoint.position.y + " & " + ballToAdd.position.y);
+        //Debug.Log("add ball: " + lowestPoint.position.y + " & " + ballToAdd.position.y);
         if (lowestPoint.position.y - ballToAdd.position.y < 0.9) transform.position += Vector3.up;
         lowestPoint.localPosition += Vector3.down;
         ballToAdd.SetParent(transform);
-        ballToAdd.localPosition = lowestPoint.localPosition;
+        ballToAdd.localPosition = new Vector3(lowestPoint.localPosition.x, lowestPoint.localPosition.y, lowestPoint.localPosition.z);
         balls.Push(ballToAdd);
     }
 
-    public void RemoveBall()
+    public Transform RemoveBall()
     {
-        if (balls.Count == 1)
+        if (balls.Count == 1 && !isWin)
         {
             //lose
             Debug.Log("lose");
-
-            return;
+            this.PostEvent(EventID.Lose);
+            return null;
         }
 
         Transform ballToRemove = balls.Pop();
         ballToRemove.SetParent(null);
         lowestPoint.localPosition += Vector3.up;
+
+        return ballToRemove;
     }
 
     public int BallCount()
     {
         return balls.Count;
+    }
+
+    public void WinGame()
+    {
+        isWin = true;
     }
 }

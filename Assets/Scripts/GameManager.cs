@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public int coins;
+    private int coins;
     public int curLevel;
 
     [SerializeField] private List<GameObject> levels = new List<GameObject>();
@@ -22,5 +22,11 @@ public class GameManager : MonoBehaviour
     {
         coins += coin;
         Debug.Log("coin: " + coins);
+        this.PostEvent(EventID.AddCoin);
+    }
+
+    public int GetCoin()
+    {
+        return coins;
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
+    private bool isStop = false;
     private bool isAttached = false;
     private SphereCollider sphereCollider;
     private Rigidbody rigidb;
@@ -18,6 +19,8 @@ public class Ball : MonoBehaviour
         //rigidb.useGravity = false;
 
         sphere = transform.GetChild(0);
+
+        this.RegisterListener(EventID.Lose, param => StopBall());
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -36,6 +39,7 @@ public class Ball : MonoBehaviour
         isAttached = true;
         //Destroy(rigidb);
         playerBallStack.AddBall(transform);
+        GameManager.instance.AddCoin(1);
     }
 
     public void RemoveBall()
@@ -45,10 +49,16 @@ public class Ball : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isStop) return;
         if (!isAttached) return;
 
         transform.eulerAngles = Vector3.zero;
         sphere.Rotate(new Vector3(90, 0, 0) * Time.fixedDeltaTime);
     }
 
+
+    private void StopBall()
+    {
+        isStop = true;
+    }
 }

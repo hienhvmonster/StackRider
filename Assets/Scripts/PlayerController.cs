@@ -18,6 +18,5 @@ public class PlayerController : BaseController
     {
         if (!mouseSwipeUse) return;
         playerMotor.SetMoveSide(upPosition - downPosition);
-
     }
 }

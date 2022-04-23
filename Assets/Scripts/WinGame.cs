@@ -16,5 +16,6 @@ public class WinGame : MonoBehaviour
     private void Win()
     {
         Debug.Log("win");
+        this.PostEvent(EventID.Win,transform.position);
     }
 }

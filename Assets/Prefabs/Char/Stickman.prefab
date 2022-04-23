@@ -370,6 +370,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lowestPoint: {fileID: 611498647}
+  ballDestroyDuration: 0.7
 --- !u!65 &8855023519083555047
 BoxCollider:
   m_ObjectHideFlags: 0
