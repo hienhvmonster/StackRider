@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerWinMotor : MonoBehaviour
 {
+    private Action<object> _actionWin;
+
     private bool isWin;
     private Vector3 winPos;
     [SerializeField] private float speed = 2;
@@ -11,7 +14,13 @@ public class PlayerWinMotor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        this.RegisterListener(EventID.Win, param => Win((Vector3)param));
+        _actionWin = param => Win((Vector3)param);
+        this.RegisterListener(EventID.OnWin, _actionWin);
+    }
+
+    private void OnDestroy()
+    {
+        this.RemoveListener(EventID.OnWin, _actionWin);
     }
 
     // Update is called once per frame

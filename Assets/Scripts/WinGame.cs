@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class WinGame : MonoBehaviour
 {
+    private bool winCheck = false;
+
     private void OnCollisionEnter(Collision collision)
     {
-
+        if (winCheck) return;
         BallStack playerBallStack = collision.transform.GetComponentInParent<BallStack>();
 
         if (playerBallStack != null) Win();
@@ -15,7 +17,7 @@ public class WinGame : MonoBehaviour
 
     private void Win()
     {
-        Debug.Log("win");
-        this.PostEvent(EventID.Win,transform.position);
+        this.PostEvent(EventID.OnWin,transform.position);
+        winCheck = true;
     }
 }

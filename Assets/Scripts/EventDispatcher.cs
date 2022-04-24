@@ -30,8 +30,10 @@ public class EventDispatcher : MonoBehaviour
     public void PostEvent(EventID eventID, object param = null)
     {
         if (callbacks[(int)eventID] != null)
+        {
             callbacks[(int)eventID](param);
-        else Debug.Log(eventID + " null");
+        }
+        else Debug.LogWarning(eventID + " null");
     }
 
     // Use for Unregister, not listen for an event anymore.

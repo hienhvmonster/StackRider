@@ -1,9 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
+    private Action<object> _actionLose;
+    private Action<object> _actionRun;
+
     private bool isStop = true;
     private bool isAttached = false;
 
@@ -15,8 +19,17 @@ public class Ball : MonoBehaviour
 
         sphere = transform.GetChild(0);
 
-        this.RegisterListener(EventID.Lose, param => StopBall());
-        this.RegisterListener(EventID.Run, param => StartBall());
+        _actionLose = param => StopBall();
+        this.RegisterListener(EventID.OnLose, _actionLose);
+
+        _actionRun = param => StartBall();
+        this.RegisterListener(EventID.OnRun, _actionRun);
+    }
+
+    private void OnDestroy()
+    {
+        this.RemoveListener(EventID.OnLose, _actionLose);
+        this.RemoveListener(EventID.OnRun, _actionRun);
     }
 
     private void OnCollisionEnter(Collision collision)

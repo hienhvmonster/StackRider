@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraMotor : MonoBehaviour
 {
+    private Action<object> _actionWin;
+
     [SerializeField] private Transform followPoint;
     private Vector3 basicDistance;
 
@@ -15,7 +18,14 @@ public class CameraMotor : MonoBehaviour
     private void Start()
     {
         basicDistance = transform.position - followPoint.position;
-        this.RegisterListener(EventID.Win, param => WinGame((Vector3)param));
+
+        _actionWin = param => WinGame((Vector3)param);
+        this.RegisterListener(EventID.OnWin, _actionWin);
+    }
+
+    private void OnDestroy()
+    {
+        this.RemoveListener(EventID.OnWin, _actionWin);
     }
 
     private void FixedUpdate()

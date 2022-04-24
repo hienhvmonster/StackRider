@@ -6,6 +6,7 @@ public class BallStack : MonoBehaviour
 {
     private Stack<Transform> balls = new Stack<Transform>();
     [SerializeField] Transform lowestPoint;
+    [SerializeField] Transform ballTrashCan;
 
     private bool isWin = false;
     private int coinWin = 5;
@@ -34,6 +35,11 @@ public class BallStack : MonoBehaviour
                     prevBallDestroyTime = Time.time;
                 }
             }
+            else
+            {
+                this.PostEvent(EventID.OnDoneGame);
+                isWin = false;
+            }
         }
     }
 
@@ -52,13 +58,12 @@ public class BallStack : MonoBehaviour
         if (balls.Count == 1 && !isWin)
         {
             //lose
-            Debug.Log("lose");
-            this.PostEvent(EventID.Lose);
+            this.PostEvent(EventID.OnLose);
             return null;
         }
 
         Transform ballToRemove = balls.Pop();
-        ballToRemove.SetParent(null);
+        ballToRemove.SetParent(ballTrashCan);
         lowestPoint.localPosition += Vector3.up;
 
         return ballToRemove;

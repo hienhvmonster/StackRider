@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,6 +7,11 @@ using UnityEngine.UI;
 
 public class StartMenu : MonoBehaviour
 {
+    private Action<object> _actionCoinChange;
+    private Action<object> _actionNewGame;
+    private Action<object> _actionDoneGame;
+    private Action<object> _actionLose;
+
     public GameObject headStart;
     public GameObject bodyStart;
 
@@ -17,17 +23,32 @@ public class StartMenu : MonoBehaviour
 
     private void Start()
     {
-        this.RegisterListener(EventID.OnCoinChange, param => OnChangeCoinValue());
-        this.RegisterListener(EventID.NewGame, param => OnChangeLevel((string)param));
+        _actionCoinChange = param => OnChangeCoinValue();
+        this.RegisterListener(EventID.OnCoinChange, _actionCoinChange);
 
-        this.RegisterListener(EventID.Win, param => WinBoardActivate());
-        this.RegisterListener(EventID.Lose, param => LoseBoardActivate());
+        _actionNewGame = param => OnChangeLevel((string)param);
+        _actionNewGame += param => BodyStartActivate();
+        this.RegisterListener(EventID.OnNewGame, _actionNewGame);
+
+        _actionDoneGame = param => WinBoardActivate();
+        this.RegisterListener(EventID.OnDoneGame, _actionDoneGame);
+
+        _actionLose = param => LoseBoardActivate();
+        this.RegisterListener(EventID.OnLose, _actionLose);
+    }
+
+    private void OnDestroy()
+    {
+        this.RemoveListener(EventID.OnCoinChange, _actionCoinChange);
+        this.RemoveListener(EventID.OnNewGame, _actionNewGame);
+        this.RemoveListener(EventID.OnDoneGame, _actionDoneGame);
+        this.RemoveListener(EventID.OnLose, _actionLose);
     }
 
     public void StartGame()
     {
         bodyStart.SetActive(false);
-        this.PostEvent(EventID.Run);
+        this.PostEvent(EventID.OnRun);
     }
 
 
@@ -66,12 +87,18 @@ public class StartMenu : MonoBehaviour
         winBoard.SetActive(false);
     }
 
-    public void LoseBoardActivate()
+    private void LoseBoardActivate()
     {
         loseBoard.SetActive(true);
     }
-    public void WinBoardActivate()
+
+    private void WinBoardActivate()
     {
         winBoard.SetActive(true);
+    }
+
+    private void BodyStartActivate()
+    {
+        bodyStart.SetActive(true);
     }
 }

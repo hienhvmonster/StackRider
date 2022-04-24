@@ -1,9 +1,10 @@
 public enum EventID
 {
     None = 0,
-    Run,
+    OnRun,
     OnCoinChange,
-    Win,
-    Lose,
-    NewGame,
+    OnWin,
+    OnLose,
+    OnNewGame,
+    OnDoneGame,
 }

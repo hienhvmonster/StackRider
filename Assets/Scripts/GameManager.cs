@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+
+    private Action<object> _actionWin;
+    private Action<object> _actionLose;
 
     private int inGameCoin;
     private int realCoin;
@@ -25,16 +29,24 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        this.RegisterListener(EventID.Win, param => SetCoinWinGame());
-        this.RegisterListener(EventID.Lose, param => SetCoinLoseGame());
+        _actionWin = param => SetCoinWinGame();
+        this.RegisterListener(EventID.OnWin, _actionWin);
 
-        this.RegisterListener(EventID.Win, param => NextLevel());
+        _actionLose = param => SetCoinLoseGame();
+        this.RegisterListener(EventID.OnLose, _actionLose);
+
+        LoadLevel(2);
+    }
+
+    private void OnDestroy()
+    {
+        this.RemoveListener(EventID.OnWin, _actionWin);
+        this.RemoveListener(EventID.OnLose, _actionLose);
     }
 
     public void AddCoin(int coin)
     {
         inGameCoin += coin;
-        Debug.Log("coin: " + inGameCoin);
         this.PostEvent(EventID.OnCoinChange);
     }
 
@@ -56,26 +68,28 @@ public class GameManager : MonoBehaviour
     private void LoadLevel(int levelIndex)
     {
         curLevel = levelIndex;
-        string levelName = "LEVEL " + (curLevel + 1);
-        Destroy(levelFather.GetChild(0));
+        string levelName = "LEVEL " + (curLevel + 1).ToString();
 
-        Instantiate<GameObject>(levels[curLevel], levelFather);
+        if (levelFather.childCount > 0)
+        {
+            DestroyImmediate(levelFather.GetChild(0).gameObject);
+        }
 
-        this.PostEvent(EventID.NewGame, levelName);
+        Instantiate(levels[curLevel], levelFather, true);
+
+        this.PostEvent(EventID.OnNewGame, levelName);
     }
 
     public void NextLevel()
     {
         if (curLevel >= levels.Count - 1)
         {
-            curLevel = levels.Count - 1;
+            LoadLevel(levels.Count - 1);
         }
         else
         {
-            curLevel++;
+            LoadLevel(curLevel + 1);
         }
-
-        ResetLevel();
     }
 
     public void ResetLevel()

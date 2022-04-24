@@ -1,9 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMotor : MonoBehaviour
 {
+    private Action<object> _actionWin;
+    private Action<object> _actionLose;
+    private Action<object> _actionRun;
+
     private bool isStop = true;
 
     [SerializeField] private float maxDistanceRoad = 1.5f;
@@ -16,9 +21,22 @@ public class PlayerMotor : MonoBehaviour
     private void Start()
     {
         rigidb = GetComponent<Rigidbody>();
-        this.RegisterListener(EventID.Lose, param => StopPlayer());
-        this.RegisterListener(EventID.Win, param => StopPlayer());
-        this.RegisterListener(EventID.Run, param => StartPlayer());
+
+        _actionWin = param => StopPlayer();
+        this.RegisterListener(EventID.OnWin, _actionWin);
+
+        _actionLose = param => StopPlayer();
+        this.RegisterListener(EventID.OnLose, _actionLose);
+
+        _actionRun = param => StartPlayer();
+        this.RegisterListener(EventID.OnRun, _actionRun);
+    }
+
+    private void OnDestroy()
+    {
+        this.RemoveListener(EventID.OnWin, _actionWin);
+        this.RemoveListener(EventID.OnLose, _actionLose);
+        this.RemoveListener(EventID.OnRun, _actionRun);
     }
 
     private void FixedUpdate()
