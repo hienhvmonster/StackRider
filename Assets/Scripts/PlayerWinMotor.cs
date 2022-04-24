@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlayerWinMotor : MonoBehaviour
 {
+    private AnimatorController anim;
     private Action<object> _actionWin;
 
     private bool isWin;
@@ -16,6 +17,7 @@ public class PlayerWinMotor : MonoBehaviour
     {
         _actionWin = param => Win((Vector3)param);
         this.RegisterListener(EventID.OnWin, _actionWin);
+        anim = GetComponent<AnimatorController>();
     }
 
     private void OnDestroy()
@@ -29,11 +31,12 @@ public class PlayerWinMotor : MonoBehaviour
         if (!isWin) return;
         
         transform.Translate((winPos - transform.position) * Time.fixedDeltaTime * speed);
-        if (Vector3.Magnitude((winPos - transform.position)) < 0.01)
+        if (Vector3.Magnitude((winPos - transform.position)) < 0.05)
         {
             transform.position = winPos;
             isWin = false;
             GetComponent<BallStack>().WinGame();
+            anim.Dance();
         }
     }
 
@@ -42,5 +45,6 @@ public class PlayerWinMotor : MonoBehaviour
         winPos = winMiddle;
         winPos.y = transform.position.y;
         isWin = true;
+        anim.Cheer();
     }
 }

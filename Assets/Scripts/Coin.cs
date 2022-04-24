@@ -28,21 +28,24 @@ public class Coin : MonoBehaviour
 
         BallStack playerBallStack = collision.transform.GetComponentInParent<BallStack>();
 
-        if (playerBallStack != null) AddCoin();
+        if (playerBallStack != null)
+        {
+            AddCoin();
+        }
         //else Debug.Log("my name: " + name + " & your: " + collision.transform.name);
     }
 
     private void AddCoin()
     {
+        VibarationController.SoftVibrate();
         boxCollider.isTrigger = true;
         GameManager.instance.AddCoin(1);
         isFlyUp = true;
-        StartCoroutine(CoinFlyUp());
+        Invoke("CoinDisappear", 1f);
     }
 
-    IEnumerator CoinFlyUp()
+    private void CoinDisappear()
     {
-        yield return new WaitForSeconds(1f);
         Destroy(gameObject);
     }
 }

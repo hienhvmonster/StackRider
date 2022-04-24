@@ -19,5 +19,6 @@ public class WinGame : MonoBehaviour
     {
         this.PostEvent(EventID.OnWin,transform.position);
         winCheck = true;
+        VibarationController.SoftVibrate();
     }
 }

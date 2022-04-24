@@ -48,17 +48,13 @@ public class Ball : MonoBehaviour
         playerBallStack.AddBall(transform);
         if (playerBallStack.BallCount() > 1)
         {
+            VibarationController.HardVibrate();
             GameManager.instance.AddCoin(1);
         }
         else
         {
             GameManager.instance.AddCoin(0);
         }
-    }
-
-    public void RemoveBall()
-    {
-        isAttached = false;
     }
 
     private void FixedUpdate()
@@ -75,7 +71,7 @@ public class Ball : MonoBehaviour
         isStop = false;
     }
 
-    private void StopBall()
+    public void StopBall()
     {
         isStop = true;
     }

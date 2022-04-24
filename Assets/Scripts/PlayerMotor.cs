@@ -79,5 +79,6 @@ public class PlayerMotor : MonoBehaviour
     public void StartPlayer()
     {
         isStop = false;
+        GetComponent<AnimatorController>().Run();
     }
 }

@@ -28,6 +28,7 @@ public class BallStack : MonoBehaviour
             {
                 if (Time.time - prevBallDestroyTime >= ballDestroyDuration)
                 {
+                    VibarationController.HardVibrate();
                     Transform ballToRemove = RemoveBall();
                     ballToRemove.gameObject.SetActive(false);
                     GameManager.instance.AddCoin(coinWin);
@@ -59,12 +60,14 @@ public class BallStack : MonoBehaviour
         {
             //lose
             this.PostEvent(EventID.OnLose);
+            GetComponent<AnimatorController>().Lose();
             return null;
         }
 
         Transform ballToRemove = balls.Pop();
         ballToRemove.SetParent(ballTrashCan);
         lowestPoint.localPosition += Vector3.up;
+        ballToRemove.GetComponent<Ball>().StopBall();
 
         return ballToRemove;
     }

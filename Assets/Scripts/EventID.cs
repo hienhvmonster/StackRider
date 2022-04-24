@@ -6,5 +6,5 @@ public enum EventID
     OnWin,
     OnLose,
     OnNewGame,
-    OnDoneGame,
+    OnDoneGame,//after win game and done all animation
 }

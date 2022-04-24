@@ -18,6 +18,7 @@ public class Wall : MonoBehaviour
     private void StopBall(BallStack playerBallStack)
     {
         isAbleToStop = false;
+        VibarationController.HardVibrate();
         playerBallStack.RemoveBall();
     }
 }

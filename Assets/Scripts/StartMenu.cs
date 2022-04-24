@@ -65,6 +65,13 @@ public class StartMenu : MonoBehaviour
         level.SetText(levelName);
     }
 
+    public void OnSkipLevelPress()
+    {
+        //Chay Ads
+
+        GameManager.instance.NextLevel();
+        loseBoard.SetActive(false);
+    }
 
     public void OnTryAgainPress()
     {
@@ -82,7 +89,7 @@ public class StartMenu : MonoBehaviour
     {
         //Chay Ads
 
-
+        GameManager.instance.SetCoinX2Game();
         GameManager.instance.NextLevel();
         winBoard.SetActive(false);
     }
